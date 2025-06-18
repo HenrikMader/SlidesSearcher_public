@@ -15,14 +15,14 @@ from chromadb.utils.embedding_functions.sentence_transformer_embedding_function 
 from chromadb import Collection
 from tqdm import tqdm
 
-from slidesearcher.config import config
+from config import config
 
-try:
+#try:
     # running from external/main.py
-    from slidesearcher.descriptions import describe_image
-except ModuleNotFoundError:
+#    from describe_each_pdf import describe_image
+#except ModuleNotFoundError:
     # running file standalone
-    from descriptions import describe_image
+#    from describe_each_pdf import describe_image
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 logger = logging.getLogger(__name__)
@@ -95,6 +95,9 @@ def insert_files_into_db(db_dir: str):
     Args:
         db_dir (str): The directory for the db to store its files.
     """
+    print("db_dir")
+    print(db_dir)
+    db_dir = str(db_dir)
     chroma_client = chromadb.PersistentClient(path=db_dir)
     collection_status, collection = ensure_collection(chroma_client, "all_files")
 
@@ -102,16 +105,21 @@ def insert_files_into_db(db_dir: str):
         for file in tqdm(
             os.listdir(config.output_dir / folder), desc="Describing Slides"
         ):
-            img_path = config.output_dir / folder / file
+            print(file)
+            if (".desc.txt" not in str(file)):
+                img_path = config.output_dir / folder / file
 
-            output = describe_image(
-                Path(img_path), model_path=str(config.vision_model_path)
-            )
-            collection.add(
-                documents=[output],
-                metadatas=[{"image_path": img_path, "presentation": folder}],
-                ids=[img_path],
-            )
+                #output = describe_image(
+                #    Path(img_path), model_path=str(config.vision_model_path)
+                #)
+
+                output = open(str(img_path) + ".desc.txt")
+                output = output.read()
+                collection.add(
+                    documents=[output],
+                    metadatas=[{"image_path": str(img_path), "presentation": str(folder)}],
+                    ids=[str(img_path)],
+                )
 
 
 if __name__ == "__main__":

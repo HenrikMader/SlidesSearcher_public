@@ -1,0 +1,6 @@
+<script>
+    // Redirect to login page if not logged in
+    if (!sessionStorage.getItem('isLoggedIn')) {
+        window.location.href = '/login.html';  // <-- point to your login file
+    }
+</script>

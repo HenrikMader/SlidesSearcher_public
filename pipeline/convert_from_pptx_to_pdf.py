@@ -83,7 +83,7 @@ def convert_files_in_dir(
     for file in tqdm(os.listdir(pptx_dir), desc="Processing Powerpoints"):
         logger.debug(f"converting file {file}.")
         name, ext = os.path.splitext(file)
-        '''
+
         if ext.lower() not in (".ppt", ".pptx"):
             # file is not a supported powerpoint presentation.
             # skipping.
@@ -96,26 +96,22 @@ def convert_files_in_dir(
             logger.debug("Output dir does not exist, creating.")
             os.mkdir(output_dir / name)
 
-        
+        pdf_file_name = name + ".pdf"
         if not (output_dir / name / pdf_file_name).exists():
             logger.debug(f"creating PDF for {file}")
             convert_file(input_file, output_dir / name)
         else:
-            logger.debug(f"file {file} already was converted to a PDF.") '''
-        
-        
-        os.mkdir(output_dir / name )
+            logger.debug(f"file {file} already was converted to a PDF.")
 
-        pdf_file_name = name + ".pdf"
         images_from_path = convert_from_path(
-            pptx_dir / pdf_file_name,
+            output_dir / name / pdf_file_name,
             output_folder=output_dir / name,
             fmt="png",
             size=(800, None),
         )
 
-        #if delete_intermediates:
-        #    os.remove(output_dir / name / pdf_file_name)
+        if delete_intermediates:
+            os.remove(output_dir / name / pdf_file_name)
 
 
 if __name__ == "__main__":

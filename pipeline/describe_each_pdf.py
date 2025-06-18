@@ -41,7 +41,7 @@ __all__ = [
 ]
 
 IMAGE_DESCRIPTION_PROMPT = """
-Describe this image in german.
+Describe this image.
 """
 DEFAULT_MODEL_PATH = config.vision_model_path
 DEFAULT_MAX_TOKENS = 1024
